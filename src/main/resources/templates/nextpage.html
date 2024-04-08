@@ -1,0 +1,43 @@
+<tr th:each="message : ${messages}">
+    <td th:text="${message.title()}">Important Announcement</td>
+    <td th:text="${message.messageBody()}">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</td>
+    <td class="author-cell" th:text="${message.userUserName()}">John Doe</td>
+    <td class="date-cell" th:text="${message.date()}">2024-02-27</td>
+    <td>
+        <p th:text="${message.lastChanged()}">
+        </p>
+        <p th:if="${message.lastChanged() != null}" th:text="#{editedby}+ ':' +${message.userUserName()}">
+        </p>
+    </td>
+    <td>
+        <button class="btn btn-danger"
+                th:attr="hx-get='/web/messageshtmx/edit/'+${message.id()}"
+                hx-trigger="edit"
+                onClick="let editing = document.querySelector('.editing')
+                         if(editing) {
+                           Swal.fire({title: 'Already Editing',
+                                      showCancelButton: true,
+                                      confirmButtonText: 'Yep, Edit This Row!',
+                                      text:'Hey!  You are already editing a row!  Do you want to cancel that edit and continue?'})
+                           .then((result) => {
+                                if(result.isConfirmed) {
+                                   htmx.trigger(editing, 'cancel')
+                                   htmx.trigger(this, 'edit')
+                                }
+                            })
+                         } else {
+                            htmx.trigger(this, 'edit')
+                         }">
+            Edit
+        </button>
+    </td>
+</tr>
+<tr id="replaceMe" th:if="${!(nextpage >= length)}">
+    <td colspan="3">
+        <button class='btn' th:attr="hx-get=@{/web/messageshtmx/nextpage(page=${nextpage})}"
+                hx-target="#replaceMe"
+                hx-swap="outerHTML">
+            Load More...
+        </button>
+    </td>
+</tr>

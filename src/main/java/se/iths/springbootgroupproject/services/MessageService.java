@@ -84,4 +84,15 @@ public class MessageService {
             return message.get();
         throw new EntityNotFoundException();
     }
+    public List<MessageAndUsername> getPage(int p, int i) {
+        return messageRepository.findMessageBy(p,i).stream()
+                .map(message -> new MessageAndUsername(
+                        message.getId(),
+                        message.getDate(),
+                        message.getLastChanged(),
+                        message.getTitle(),
+                        message.getMessageBody(),
+                        message.getUser().getUserName()))
+                .toList();
+    }
 }

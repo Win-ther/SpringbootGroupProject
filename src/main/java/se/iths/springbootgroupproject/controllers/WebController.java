@@ -158,6 +158,51 @@ public class WebController {
         messageService.save(messageForm.toEntity(user));
         return "redirect:/web/myprofile";
     }
-
-
+    @GetMapping("/messageshtmx")
+    public String messagePageHTMX(Model model, HttpServletRequest httpServletRequest) {
+        var messages = messageService.getPage(0,2);
+        var length = messageService.findAllMessages().size();
+        model.addAttribute("nextpage", messages.getLast().id());
+        model.addAttribute("messages", messages);
+        model.addAttribute("httpServletRequest", httpServletRequest);
+        model.addAttribute("length", length);
+        return "messageshtmx";
+    }
+    @GetMapping("messageshtmx/nextpage")
+    public String loadMore(Model model, @RequestParam(defaultValue = "1") String page) {
+        int p = Integer.parseInt(page);
+        var messages = messageService.getPage(p, 2);
+        var length = messageService.findAllMessages().size();
+        model.addAttribute("length", length);
+        model.addAttribute("nextpage", messages.getLast().id());
+        model.addAttribute("messages", messages);
+        return "nextpage";
+    }
+    @GetMapping("messageshtmx/edit/{id}")
+    public String editHtmx(Model model, @PathVariable Long id, @AuthenticationPrincipal OAuth2User principal) {
+        var message = messageService.findById(id);
+        model.addAttribute("message", message);
+        User currectUser = userService.findByGitHubId(principal.getAttribute("id"));
+        if (!message.getUser().getId().equals(currectUser.getId())) {
+            return "returnRowHtmx";
+        }
+        return "htmxedit";
+    }
+    @GetMapping("messageshtmx/{id}")
+    public String returnRow(Model model, @PathVariable Long id) {
+        var message = messageService.findById(id);
+        model.addAttribute("message", message);
+        return "returnRowHtmx";
+    }
+    @PostMapping("messageshtmx/{id}")
+    public String saveRow(Model model, @ModelAttribute("formData") CreateMessageFormData messageForm, @PathVariable Long id) {
+        Message message = messageService.findById(id);
+        message.setMessageBody(messageForm.getMessageBody());
+        message.setTitle(messageForm.getTitle());
+        message.setPrivateMessage(messageForm.isPrivateMessage());
+        message.setLastChanged(LocalDate.now());
+        messageService.save(message);
+        model.addAttribute("message", message);
+        return "returnRowHtmx";
+    }
 }

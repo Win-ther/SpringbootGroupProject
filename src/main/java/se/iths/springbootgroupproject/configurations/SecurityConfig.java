@@ -5,12 +5,12 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.web.client.RestClient;
 import se.iths.springbootgroupproject.services.github.GithubOAuth2UserService;
-
 @Configuration
 public class SecurityConfig {
 
@@ -25,7 +25,7 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(requests -> requests
                         .requestMatchers("/web/welcome", "/login", "/oauth/**", "/logout", "/error**","/static/**","/api/**").permitAll()
-                        .requestMatchers("/web/myprofile","/web/myprofile/editmessage*","/web/myprofile/create","/web/messages","/web/myprofile/edit").authenticated()
+                        .requestMatchers("/web/myprofile","/web/myprofile/editmessage*","/web/myprofile/create","/web/messages","/web/myprofile/edit","/web/messageshtmx","/web/messageshtmx/nextpage","/web/messageshtmx/**","/web/messageshtmx/edit/**","/web/messageshtmx/edit","/**").authenticated()
                         .anyRequest().denyAll()
                 )
                 .oauth2Login(oauth2 -> oauth2
@@ -33,7 +33,8 @@ public class SecurityConfig {
                                 userInfoEndpoint
                                         .userService(githubOAuth2UserService))
                         .successHandler(oauth2LoginSuccessHandler()))
-                .logout(logout -> logout.logoutSuccessUrl("/web/welcome"));
+                .logout(logout -> logout.logoutSuccessUrl("/web/welcome"))
+                .csrf(AbstractHttpConfigurer::disable);
         return http.build();
     }
 

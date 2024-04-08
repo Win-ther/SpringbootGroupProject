@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>GilGang messages</title>
+    <link href='https://unpkg.com/css.gg@2.0.0/icons/css/globe-alt.css' rel='stylesheet'>
+    <link href='https://unpkg.com/css.gg@2.0.0/icons/css/profile.css' rel='stylesheet'>
+    <link href='https://unpkg.com/css.gg@2.0.0/icons/css/log-out.css' rel='stylesheet'>
+    <link rel="stylesheet" href="/static/styles.css">
+    <script defer src="/static/script.js"></script>
+    <script type="application/javascript" th:src="@{/webjars/htmx.org/dist/htmx.min.js}"></script>
+</head>
+<body>
+<div class="dropdown">
+    <i class="gg-globe-alt" id="globe-icon"></i>
+    <div class="dropdown-content" id="dropdown-content">
+        <a th:href="@{${httpServletRequest.requestURI}  + '?lang=en'}">English</a>
+        <a th:href="@{${httpServletRequest.requestURI}  + '?lang=sv'}">Svenska</a>
+    </div>
+</div>
+<div class="profile-link">
+    <a th:href="'/web/myprofile'">
+        <i class="gg-profile"></i>
+    </a>
+</div>
+<div class="logout-link">
+    <a th:href="'/logout'">
+        <i class="gg-log-out"></i>
+    </a>
+</div>
+<h1 class="welcome-message" th:text="#{messages.welcome}"></h1>
+<table class="styled-table">
+    <thead>
+    <tr>
+        <th th:text="#{title}"></th>
+        <th th:text="#{body}"></th>
+        <th class ="author-cell-header" th:text="#{author}"></th>
+        <th class ="date-cell-header" th:text="#{date}"></th>
+        <th class="edit-cell-header" th:text="#{lastedit}"></th>
+    </tr>
+    </thead>
+    <tbody hx-target="closest tr" hx-swap="outerHTML">
+    <tr th:each="message : ${messages}">
+        <td th:text="${message.title()}">Important Announcement</td>
+        <td th:text="${message.messageBody()}">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</td>
+        <td class="author-cell" th:text="${message.userUserName()}">John Doe</td>
+        <td class="date-cell" th:text="${message.date()}">2024-02-27</td>
+        <td>
+            <p th:text="${message.lastChanged()}">
+            </p>
+            <p th:if="${message.lastChanged() != null}" th:text="#{editedby}+ ':' +${message.userUserName()}">
+            </p>
+        </td>
+        <td>
+            <button class="btn btn-danger"
+                    th:attr="hx-get='/web/messageshtmx/edit/'+${message.id()}"
+                    hx-trigger="edit"
+                    onClick="let editing = document.querySelector('.editing')
+                         if(editing) {
+                           Swal.fire({title: 'Already Editing',
+                                      showCancelButton: true,
+                                      confirmButtonText: 'Yep, Edit This Row!',
+                                      text:'Hey!  You are already editing a row!  Do you want to cancel that edit and continue?'})
+                           .then((result) => {
+                                if(result.isConfirmed) {
+                                   htmx.trigger(editing, 'cancel')
+                                   htmx.trigger(this, 'edit')
+                                }
+                            })
+                         } else {
+                            htmx.trigger(this, 'edit')
+                         }">
+                Edit
+            </button>
+        </td>
+    </tr>
+    <tr id="replaceMe">
+        <td colspan="3">
+            <button class='btn' th:attr="hx-get=@{/web/messageshtmx/nextpage(page=${nextpage})}"
+                    hx-target="#replaceMe"
+                    hx-swap="outerHTML">
+                Load More...
+            </button>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>

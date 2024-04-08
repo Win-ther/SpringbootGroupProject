@@ -1,0 +1,34 @@
+<tr>
+    <td th:text="${message.getTitle()}"></td>
+    <td th:text="${message.getMessageBody()}"></td>
+    <td class="author-cell" th:text="${message.getUser().getUserName()}">TEst</td>
+    <td class="date-cell" th:text="${message.getDate()}"></td>
+    <td>
+        <p th:text="${message.getLastChanged()}">
+        </p>
+        <p th:if="${message.getLastChanged() != null}" th:text="#{editedby}+ ':' +${message.getUser().getUserName()}">
+        </p>
+    </td>
+    <td>
+        <button class="btn btn-danger"
+                th:attr="hx-get='/web/messageshtmx/edit/'+${message.getId()}"
+                hx-trigger="edit"
+                onClick="let editing = document.querySelector('.editing')
+                         if(editing) {
+                           Swal.fire({title: 'Already Editing',
+                                      showCancelButton: true,
+                                      confirmButtonText: 'Yep, Edit This Row!',
+                                      text:'Hey!  You are already editing a row!  Do you want to cancel that edit and continue?'})
+                           .then((result) => {
+                                if(result.isConfirmed) {
+                                   htmx.trigger(editing, 'cancel')
+                                   htmx.trigger(this, 'edit')
+                                }
+                            })
+                         } else {
+                            htmx.trigger(this, 'edit')
+                         }">
+            Edit
+        </button>
+    </td>
+</tr>

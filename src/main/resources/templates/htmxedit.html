@@ -1,0 +1,12 @@
+<tr hx-trigger='cancel' class='editing'  th:attr="hx-get='/web/messageshtmx/'+${message.getId()}">
+    <td><input name='title' th:value='${message.title}'></td>
+    <td><input name='messageBody' th:value='${message.messageBody}'></td>
+    <td>
+        <button th:attr="hx-get='/web/messageshtmx/'+${message.getId()}">
+            Cancel
+        </button>
+        <button th:attr="hx-post='/web/messageshtmx/'+${message.getId()}" hx-include="closest tr">
+            Save
+        </button>
+    </td>
+</tr>

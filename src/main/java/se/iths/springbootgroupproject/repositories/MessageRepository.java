@@ -2,6 +2,7 @@ package se.iths.springbootgroupproject.repositories;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.ListCrudRepository;
 import org.springframework.data.repository.ListPagingAndSortingRepository;
 import se.iths.springbootgroupproject.dto.MessageAndUsername;
@@ -21,4 +22,9 @@ public interface MessageRepository extends ListCrudRepository<Message, Long>, Li
 
     @EntityGraph(attributePaths = "user.userName")
     List<MessageAndUsername> findAllByUserIdAndPrivateMessageIsFalse(Long id);
+
+    @Query(value = """
+            select * from message where id > ?1 limit ?2
+            """, nativeQuery = true)
+    List<Message> findMessageBy(long cursor, int pageSize);
 }
