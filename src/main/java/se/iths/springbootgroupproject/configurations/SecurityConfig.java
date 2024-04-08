@@ -35,8 +35,7 @@ public class SecurityConfig {
                                 userInfoEndpoint
                                         .userService(githubOAuth2UserService))
                         .successHandler(oauth2LoginSuccessHandler()))
-                .logout(logout -> logout.logoutSuccessUrl("/web/welcome"))
-                .csrf(AbstractHttpConfigurer::disable);
+                .logout(logout -> logout.logoutSuccessUrl("/web/welcome"));
         return http.build();
     }
 

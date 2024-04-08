@@ -1,6 +1,16 @@
 <tr>
-    <td th:text="${message.getTitle()}"></td>
-    <td th:text="${message.getMessageBody()}"></td>
+    <td class="messageContainer">
+        <span th:text="${message.getTitle()}">Important Announcement</span>
+        <a th:href="'/web/messages/analyse?id=' +${message.getId()}">
+            <h5 class="translateBtn" th:text="#{analyse}">translate</h5>
+        </a>
+    </td>
+    <td class="messageContainer">
+        <span th:text="${message.getMessageBody()}">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</span>
+        <a th:href="'/web/messages/translate?id=' +${message.getId()}">
+            <h5 class="translateBtn" th:text="#{translate}">translate</h5>
+        </a>
+    </td>
     <td class="author-cell" th:text="${message.getUser().getUserName()}">TEst</td>
     <td class="date-cell" th:text="${message.getDate()}"></td>
     <td>

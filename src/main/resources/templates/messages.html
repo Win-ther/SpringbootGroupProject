@@ -50,7 +50,12 @@
     </thead>
     <tbody>
     <tr th:each="message : ${messages}">
-        <td th:text="${message.title()}">Important Announcement</td>
+        <td class="messageContainer">
+            <span th:text="${message.title()}">Important Announcement</span>
+            <a th:href="'/web/messages/analyse?id=' +${message.id()}">
+                <h5 class="translateBtn" th:text="#{analyse}">translate</h5>
+            </a>
+        </td>
         <td class="messageContainer">
             <span th:text="${message.messageBody()}">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</span>
             <a th:href="'/web/messages/translate?id=' +${message.id()}">

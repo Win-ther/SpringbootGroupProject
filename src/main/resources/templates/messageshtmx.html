@@ -9,8 +9,11 @@
     <link rel="stylesheet" href="/static/styles.css">
     <script defer src="/static/script.js"></script>
     <script type="application/javascript" th:src="@{/webjars/htmx.org/dist/htmx.min.js}"></script>
+    <script th:inline="javascript">
+        const token = /*[[${_csrf.token}]]*/ "token";
+    </script>
 </head>
-<body>
+<body hx-headers='js:{"X-CSRF-TOKEN": token}'>
 <div class="dropdown">
     <i class="gg-globe-alt" id="globe-icon"></i>
     <div class="dropdown-content" id="dropdown-content">
@@ -41,7 +44,12 @@
     </thead>
     <tbody hx-target="closest tr" hx-swap="outerHTML">
     <tr th:each="message : ${messages}">
-        <td th:text="${message.title()}">Important Announcement</td>
+        <td class="messageContainer">
+            <span th:text="${message.title()}">Important Announcement</span>
+            <a th:href="'/web/messages/analyse?id=' +${message.id()}">
+                <h5 class="translateBtn" th:text="#{analyse}">translate</h5>
+            </a>
+        </td>
         <td class="messageContainer">
             <span th:text="${message.messageBody()}">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</span>
             <a th:href="'/web/messages/translate?id=' +${message.id()}">

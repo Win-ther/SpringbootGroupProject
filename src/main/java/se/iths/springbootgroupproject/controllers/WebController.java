@@ -18,9 +18,13 @@ import se.iths.springbootgroupproject.entities.User;
 import se.iths.springbootgroupproject.services.LibreTranslateService;
 import se.iths.springbootgroupproject.services.MessageService;
 import se.iths.springbootgroupproject.services.UserService;
+import se.iths.springbootgroupproject.services.WordcountService;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/web")
@@ -29,11 +33,13 @@ public class WebController {
     private final MessageService messageService;
     private final UserService userService;
     private final LibreTranslateService libreTranslateService;
+    private final WordcountService wordcountService;
 
-    public WebController(MessageService messageService, UserService userService, LibreTranslateService libreTranslateService) {
+    public WebController(MessageService messageService, UserService userService, LibreTranslateService libreTranslateService, WordcountService wordcountService) {
         this.messageService = messageService;
         this.userService = userService;
         this.libreTranslateService = libreTranslateService;
+        this.wordcountService = wordcountService;
     }
 
     @GetMapping("/welcome")
@@ -179,6 +185,20 @@ public class WebController {
         model.addAttribute("date", message.getDate());
         model.addAttribute("lastChanged",message.getLastChanged());
         return "translatemessage";
+    }
+    @GetMapping("/messages/analyse")
+    public String analyseMessage(Model model, @RequestParam("id") Long id) {
+        Message message = messageService.findById(id);
+        List<String> analysedBody = Arrays.stream(wordcountService.analyseText(message.getMessageBody())).toList();
+        Map<String,String> map = analysedBody.stream().map(s -> s.replaceAll("[{\"}]","")).map(s -> s.split(":")).collect(Collectors.toMap(strings -> strings[0], strings -> strings[1]));
+
+        model.addAttribute("title", message.getTitle());
+        model.addAttribute("message", message.getMessageBody());
+        model.addAttribute("userName",message.getUser().getUserName());
+        model.addAttribute("date", message.getDate());
+        model.addAttribute("lastChanged",message.getLastChanged());
+        model.addAttribute("analysedBody", map);
+        return "analysemessage";
     }
 
     @GetMapping("/messageshtmx")
