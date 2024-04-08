@@ -42,7 +42,12 @@
     <tbody hx-target="closest tr" hx-swap="outerHTML">
     <tr th:each="message : ${messages}">
         <td th:text="${message.title()}">Important Announcement</td>
-        <td th:text="${message.messageBody()}">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</td>
+        <td class="messageContainer">
+            <span th:text="${message.messageBody()}">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</span>
+            <a th:href="'/web/messages/translate?id=' +${message.id()}">
+                <h5 class="translateBtn" th:text="#{translate}">translate</h5>
+            </a>
+        </td>
         <td class="author-cell" th:text="${message.userUserName()}">John Doe</td>
         <td class="date-cell" th:text="${message.date()}">2024-02-27</td>
         <td>
@@ -74,7 +79,7 @@
             </button>
         </td>
     </tr>
-    <tr id="replaceMe">
+    <tr id="replaceMe" th:if="${!(nextpage >= length)}">
         <td colspan="3">
             <button class='btn' th:attr="hx-get=@{/web/messageshtmx/nextpage(page=${nextpage})}"
                     hx-target="#replaceMe"
