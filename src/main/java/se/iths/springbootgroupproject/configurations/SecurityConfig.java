@@ -27,7 +27,7 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(requests -> requests
                         .requestMatchers("/web/welcome", "/login", "/oauth/**", "/logout", "/error**","/static/**","/api/**").permitAll()
-                        .requestMatchers("/web/myprofile","/web/myprofile/editmessage*","/web/myprofile/create","/web/messages","/web/myprofile/edit","/web/messageshtmx","/web/messageshtmx/nextpage","/web/messageshtmx/**","/web/messageshtmx/edit/**","/web/messageshtmx/edit","/**", "/web/messages/translate*").authenticated()
+                        .requestMatchers("/web/myprofile","/web/myprofile/editmessage*","/web/myprofile/create","/web/messages","/web/myprofile/edit","/web/messageshtmx","/web/messageshtmx/nextpage","/web/messageshtmx/**","/web/messageshtmx/edit/**","/web/messageshtmx/edit","/**", "/web/messages/translate*","/web/myprofile/deletemessage*", "web/user*").authenticated()
                         .anyRequest().denyAll()
                 )
                 .oauth2Login(oauth2 -> oauth2

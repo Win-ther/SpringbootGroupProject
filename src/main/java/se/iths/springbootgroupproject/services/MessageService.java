@@ -84,6 +84,10 @@ public class MessageService {
             return message.get();
         throw new EntityNotFoundException();
     }
+    @CacheEvict(value = {"messages", "publicMessages"}, allEntries = true)
+    public void delete(Message message) {
+        messageRepository.delete(message);
+    }
     public List<MessageAndUsername> getPage(int p, int i) {
         return messageRepository.findMessageBy(p,i).stream()
                 .map(message -> new MessageAndUsername(
