@@ -242,6 +242,8 @@ public class WebController {
     public String messagePageHTMX(Model model, HttpServletRequest httpServletRequest) {
         var messages = messageService.getPage(0,2);
         var length = messageService.findAllMessages().size();
+        List<String> distinctUserNames = userService.findAll().stream().map(User::getUserName).toList();
+        model.addAttribute("userList", distinctUserNames);
         model.addAttribute("nextpage", messages.getLast().id());
         model.addAttribute("messages", messages);
         model.addAttribute("httpServletRequest", httpServletRequest);

@@ -21,6 +21,13 @@
         <a th:href="@{${httpServletRequest.requestURI}  + '?lang=sv'}">Svenska</a>
     </div>
 </div>
+<div class="search-list">
+    <div class="list-content" id="dropdown-search">
+        <p th:each="user : ${userList}">
+            <a th:href="@{'user?username=' + ${user}}" th:text="${user}">User</a>
+        </p>
+    </div>
+</div>
 <div class="profile-link">
     <a th:href="'/web/myprofile'">
         <i class="gg-profile"></i>
@@ -32,6 +39,11 @@
     </a>
 </div>
 <h1 class="welcome-message" th:text="#{messages.welcome}"></h1>
+<div>
+    <div id="search-container">
+        <img id="search-img" th:src="'https://i.imgur.com/Eg5HlJa.jpeg'" alt="">
+    </div>
+</div>
 <table class="styled-table">
     <thead>
     <tr>
@@ -87,7 +99,7 @@
             </button>
         </td>
     </tr>
-    <tr id="replaceMe" th:if="${!(nextpage >= length)}">
+    <tr id="replaceMe">
         <td colspan="3">
             <button class='btn' th:attr="hx-get=@{/web/messageshtmx/nextpage(page=${nextpage})}"
                     hx-target="#replaceMe"

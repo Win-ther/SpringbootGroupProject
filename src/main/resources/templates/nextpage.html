@@ -42,7 +42,7 @@
         </button>
     </td>
 </tr>
-<tr id="replaceMe" th:if="${!(nextpage >= length)}">
+<tr id="replaceMe">
     <td colspan="3">
         <button class='btn' th:attr="hx-get=@{/web/messageshtmx/nextpage(page=${nextpage})}"
                 hx-target="#replaceMe"
